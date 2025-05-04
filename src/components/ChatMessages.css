@@ -1,0 +1,69 @@
+.message-actions {
+  display: flex;
+  gap: 8px;
+}
+/* Copy Button */
+.copy-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.copy-button:hover {
+  transform: scale(1.1);
+}
+
+.copy-button svg {
+  width: 20px;
+  height: 20px;
+  fill: #888;
+}
+
+/* Speech Button */
+.speak-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.speak-button:hover {
+  transform: scale(1.1);
+}
+
+.speak-button svg {
+  width: 24px;
+  height: 24px;
+  fill: #888;
+  transition: fill 0.3s ease;
+}
+
+.speak-button.speaking svg {
+  fill: #ff4444;
+}
+
+.speak-button.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Add a subtle animation when the button is clicked */
+.speak-button:active {
+  transform: scale(0.95);
+}
