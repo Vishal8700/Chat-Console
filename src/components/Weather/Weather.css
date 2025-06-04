@@ -1,0 +1,139 @@
+.weather-info {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: #73d7fc;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 1px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    /* Remove this line as it's causing the override */
+    /* border-radius: 8px; */
+    padding: 0 12px;
+    max-width: 260px;
+    min-width: 0;
+  }
+  
+  .weather-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 1px;
+    background: none;
+    box-shadow: none;
+  }
+  
+  .temperature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e90ff;
+    margin-right: 4px;
+    min-width: 0;
+  }
+  
+  .weather-container img {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+  }
+  
+  .condition,
+  .location {
+    font-size: 0.95rem;
+    color: #2b2a2a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px; /* Adjust as needed */
+    min-width: 0;
+  }
+  
+  .weather-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  
+  
+  .temperature {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e90ff;
+    margin-right: 4px;
+  }
+  
+  .location {
+    font-size: 0.95rem;
+    color: #2b2a2a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+  }
+  
+  .updating-indicator {
+    font-size: 0.85rem;
+    color: #ff9800;
+    margin-left: 6px;
+    animation: blink 1.2s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  .weather-container img {
+    width: 26px;
+    height: 26px;
+    margin-right: 2px;
+  }
+  
+  .loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #1e90ff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+  
+  .error-container {
+    color: #b71c1c;
+    background: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+  }
+  
+  .error-container button {
+    margin-left: 10px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .error-container button:hover {
+    background: #1565c0;
+  }
+  
