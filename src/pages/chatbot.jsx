@@ -9,28 +9,16 @@ import './Chatbot.css';
 
 
 import WeatherWidget from '../components/Weather/WeatherWidget'
-
 const MODELS = {
   deepseek: {
     id: 'deepseek/deepseek-r1:free',
     name: 'DeepSeek-R1',
     apiKey: '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',
     icon: (
-      <svg viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 1L2 4.5L8 8L14 4.5L8 1Z"/>
-        <path d="M2 6.5V11.5L8 15L14 11.5V6.5L8 10L2 6.5Z"/>
-      </svg>
-    ),
-    supportsImages: false
-  },
-  Microsoftpi: {
-    id: 'microsoft/phi-4-reasoning-plus:free',
-    name: 'Microsoft-pi',
-    apiKey: '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',
-    icon: (
-      <svg viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 1L2 4.5L8 8L14 4.5L8 1Z"/>
-        <path d="M2 6.5V11.5L8 15L14 11.5V6.5L8 10L2 6.5Z"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M12 7L7 10V14L12 17L17 14V10L12 7Z" fill="currentColor"/>
+        <circle cx="12" cy="12" r="2" fill="white"/>
       </svg>
     ),
     supportsImages: false
@@ -41,9 +29,10 @@ const MODELS = {
     name: 'Dolphin-R1',
     apiKey: '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',
     icon: (
-      <svg viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 2C4.5 2 2 4.5 2 8C2 11.5 4.5 14 8 14C11.5 14 14 11.5 14 8C14 4.5 11.5 2 8 2ZM8 12C5.5 12 4 10.5 4 8C4 5.5 5.5 4 8 4C10.5 4 12 5.5 12 8C12 10.5 10.5 12 8 12Z"/>
-        <path d="M8 6C6.9 6 6 6.9 6 8C6 9.1 6.9 10 8 10C9.1 10 10 9.1 10 8C10 6.9 9.1 6 8 6Z"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C8.5 2 5.5 3.5 4 6C3 8 3.5 10.5 5 12C4 14 4.5 16.5 6 18C7.5 20.5 10.5 22 14 22C16 22 17.5 21 18.5 19.5C19.5 18 20 16 19 14C20.5 12.5 21 10 20 8C19 5.5 16 2 12 2Z"/>
+        <path d="M9 9C9.5 9 10 9.5 10 10S9.5 11 9 11 8 10.5 8 10 8.5 9 9 9Z" fill="white"/>
+        <path d="M6 12C7.5 13 9 13.5 11 13C10 14 8.5 14.5 7 14C6.5 13.5 6 13 6 12Z" fill="white"/>
       </svg>
     ),
     supportsImages: false
@@ -54,76 +43,79 @@ const MODELS = {
     name: 'Sarvam AI',
     apiKey: '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',
     icon: (
-      <svg viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 1C4.1 1 1 4.1 1 8s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12.6C4.4 13.6 1.4 10.6 1.4 8S4.4 2.4 8 2.4s6.6 3 6.6 6.6-3 6.6-6.6 6.6z"/>
-        <path d="M8 3.5C5 3.5 2.5 6 2.5 9s2.5 5.5 5.5 5.5 5.5-2.5 5.5-5.5S11 3.5 8 3.5zm0 9.9c-2.4 0-4.4-2-4.4-4.4S5.6 4.6 8 4.6s4.4 2 4.4 4.4-2 4.4-4.4 4.4z"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L22 8.5V15.5L12 22L2 15.5V8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M12 6L18 10V14L12 18L6 14V10L12 6Z" fill="currentColor"/>
+        <text x="12" y="14" textAnchor="middle" fontSize="6" fill="white" fontFamily="sans-serif">स</text>
       </svg>
     ),
     supportsImages: false
   },
+  
   gemini: {
-    id: 'google/gemma-3-1b-it:free',
-    name: 'Gemini-3.1b',
-    apiKey: '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',
+    id: 'qwen/qwen3-30b-a3b:free',
+    name: 'Qwin 3',
+    apiKey: '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',
     icon: (
-      <svg viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 0L3 3V7C3 10.3137 5.13401 13.1159 8 14C10.866 13.1159 13 10.3137 13 7V3L8 0Z"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L3 7L12 12L21 7L12 2Z"/>
+        <path d="M3 12L12 17L21 12"/>
+        <path d="M3 17L12 22L21 17"/>
+        <circle cx="12" cy="7" r="1.5" fill="white"/>
+        <circle cx="12" cy="12" r="1.5" fill="white"/>
+        <circle cx="12" cy="17" r="1.5" fill="white"/>
       </svg>
     ),
     supportsImages: false
   },
+  
   qwin: {
-    id: 'qwen/qwen2.5-vl-3b-instruct:free',
+    id: 'qwen/qwen2.5-vl-72b-instruct:free',
     name: 'Qwin 2.5',
-    apiKey: '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',
+    apiKey: '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',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
-        <path d="M21 12C21.0013 13.7425 20.9053 15.4852 20.712 17.2199L20.6948 17.3739C20.4473 19.5951 18.7041 21.357 16.48 21.6342L15.5738 21.7471C15.079 21.8088 14.8316 21.8396 14.5845 21.8654C12.866 22.0449 11.1335 22.0449 9.41505 21.8654C9.16792 21.8396 8.92051 21.8088 8.42569 21.7471L7.41019 21.6206C5.24868 21.3512 3.55266 19.6422 3.30532 17.4844C2.89823 13.9329 2.89823 10.3467 3.30532 6.79516L3.32102 6.65818C3.56225 4.55367 5.15124 2.85176 7.23936 2.4614L7.4544 2.4212C10.4585 1.8596 13.541 1.8596 16.5451 2.42119L16.8681 2.48157C18.8934 2.86019 20.4367 4.50764 20.6774 6.54809C20.7345 7.03145 20.7839 7.51548 20.8258 8" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M17 6C16.2804 6.60263 14.49 7.5 12 7.5C9.51 7.5 7.71957 6.60263 7 6" strokeWidth="1.5" strokeLinecap="round"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M8 8L16 16M16 8L8 16" stroke="currentColor" strokeWidth="2"/>
+        <circle cx="8" cy="8" r="2" fill="currentColor"/>
+        <circle cx="16" cy="8" r="2" fill="currentColor"/>
+        <circle cx="8" cy="16" r="2" fill="currentColor"/>
+        <circle cx="16" cy="16" r="2" fill="currentColor"/>
       </svg>
     ),
     supportsImages: true
   },
-  gemma: {
-    id: 'google/gemma-3-1b-it:free',
-    name: 'Gemma-3.1b',
-    apiKey: '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',
+  
+  mistral: {
+    id: 'mistralai/mistral-small-3.2-24b-instruct:free',
+    name: 'mistral',
+    apiKey: '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',
     icon: (
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" strokeWidth="3" stroke="currentColor" fill="none">
-        <circle cx="34.52" cy="11.43" r="5.82"></circle>
-        <circle cx="53.63" cy="31.6" r="5.82"></circle>
-        <circle cx="34.52" cy="50.57" r="5.82"></circle>
-        <circle cx="15.16" cy="42.03" r="5.82"></circle>
-        <circle cx="15.16" cy="19.27" r="5.82"></circle>
-        <circle cx="34.51" cy="29.27" r="4.7"></circle>
-        <line x1="20.17" y1="16.3" x2="28.9" y2="12.93"></line>
-        <line x1="38.6" y1="15.59" x2="49.48" y2="27.52"></line>
-        <line x1="50.07" y1="36.2" x2="38.67" y2="46.49"></line>
-        <line x1="18.36" y1="24.13" x2="30.91" y2="46.01"></line>
-        <line x1="20.31" y1="44.74" x2="28.7" y2="48.63"></line>
-        <line x1="17.34" y1="36.63" x2="31.37" y2="16.32"></line>
-        <line x1="20.52" y1="21.55" x2="30.34" y2="27.1"></line>
-        <line x1="39.22" y1="29.8" x2="47.81" y2="30.45"></line>
-        <line x1="34.51" y1="33.98" x2="34.52" y2="44.74"></line>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 6C4 4.9 4.9 4 6 4H18C19.1 4 20 4.9 20 6V18C20 19.1 19.1 20 18 20H6C4.9 20 4 19.1 4 18V6Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M8 12L12 8L16 12L12 16L8 12Z" fill="currentColor"/>
+        <path d="M12 6V10M12 14V18M6 12H10M14 12H18" stroke="white" strokeWidth="1.5"/>
       </svg>
     ),
-    supportsImages: false
+    supportsImages: true
   },
+ 
   sera: {
     id: 'sera-ai',
     name: 'Sera AI',
     apiKey: '', // No API key needed for this model
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
-        <path d="M12 3L4 9V21H20V9L12 3Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M12 8V16" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M8 12H16" strokeWidth="2" strokeLinecap="round"/>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L22 9V22H2V9L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M12 7L17 10V17H7V10L12 7Z" fill="currentColor"/>
+        <path d="M9 12H15" stroke="white" strokeWidth="2"/>
+        <path d="M12 9V15" stroke="white" strokeWidth="2"/>
+        <circle cx="12" cy="12" r="1.5" fill="white"/>
       </svg>
     ),
     supportsImages: false
   }
 }
-
 const STORAGE_KEY = 'deepseek-chat-history'
 const USER_KEY = 'chat-user-data'
 
@@ -353,7 +345,7 @@ function Chatbot() {
     let messageContent
     let userMessage
 
-    if ((currentModel === 'gemini' || currentModel === 'gemma' || currentModel === 'qwin' || currentModel === 'deepseekv3'|| currentModel === 'gemma') && imageUrl) {
+    if ((currentModel === 'qwin' || currentModel === 'mistral') && imageUrl) {
       messageContent = [
         {
           type: 'text',
