@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import './PdfSearch.css';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import logo from './icon.png';
 function PdfSearch() {
   const [pdfFile, setPdfFile] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -215,7 +215,7 @@ function PdfSearch() {
         <div className="pdf-chat-header">
           <div className="pdf-chat-title-with-logo">
             <img
-              src="src/assets/icon.png"  // Replace with actual path
+              src={logo}  // Replace with actual path
               alt="Logo"
               className="pdf-chat-logo"
             />

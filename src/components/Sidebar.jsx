@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Sidebar.css';
-
+import logo from '../assets/icon.png';
 function Sidebar({ user, chats, currentChatId, currentModel, MODELS, handleLogin, handleLogout, createNewChat, setCurrentChatId, deleteChat }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ function Sidebar({ user, chats, currentChatId, currentModel, MODELS, handleLogin
       <div className="sidebar-header">
         <div className="logo-container">
           <img
-            src="src/assets/icon.png" // Update with actual path
+            src={logo} // Update with actual path
             alt="Sera AI Logo"
             className="logo-image"
           />
