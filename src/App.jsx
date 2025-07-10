@@ -7,6 +7,7 @@ import './App.css';
 import NewsApp from './pages/NewsApp.jsx';
 import PdfSearch from './components/PdfSearch/PdfSearch.jsx';
 import VoiceConversation from './components/Conversation/VoiceConversation.jsx';
+import HomePage from './pages/HomePage.jsx'
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
               <Route path="/discover" element={<NewsApp/>} />
               <Route path="/library" element={<PdfSearch/>} />
               <Route path="/conversation" element={<VoiceConversation/>} />
+              <Route path="/in" element={<HomePage/>} />
             </Routes>
           </div>
         </div>

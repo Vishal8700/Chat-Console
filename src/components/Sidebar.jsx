@@ -99,11 +99,14 @@ function Sidebar({ user, chats, currentChatId, currentModel, MODELS, handleLogin
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
         <div className="logo-container">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#4FCDF9">
-            <path d="M12 0L1 6v12l11 6 11-6V6L12 0zm0 3.6l8 4.4-8 4.4-8-4.4 8-4.4z" />
-          </svg>
+          <img
+            src="src/assets/icon.png" // Update with actual path
+            alt="Sera AI Logo"
+            className="logo-image"
+          />
           <span className="logo-text">Sera AI</span>
         </div>
+
         
         {user ? (
           <div className="user-profile">

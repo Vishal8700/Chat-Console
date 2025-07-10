@@ -72,49 +72,49 @@ const NewWeatherWidget = () => {
   };
 
   return (
-    <div className="weather-card-modern">
-      <div className="weather-search">
+    <div className="we-weather-card-modern">
+      <div className="we-weather-search">
         <form onSubmit={handleSearch}>
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Search location..."
-            className="new-search-input"
+            className="we-new-search-input"
           />
         </form>
       </div>
 
-      {loading && <div className="loading-spinner" />}
-      {error && <div className="weather-error">{error}</div>}
+      {loading && <div className="we-loading-spinner" />}
+      {error && <div className="we-weather-error">{error}</div>}
 
       {weather && !loading && !error && (
         <>
-          <div className="weather-header">
-            <div className="location-name">{weather.location.name}</div>
-            <div className="weather-condition">{weather.current.condition.text}</div>
+          <div className="we-weather-header">
+            <div className="we-location-name">{weather.location.name}</div>
+            <div className="we-weather-condition">{weather.current.condition.text}</div>
           </div>
 
-          <div className="current-temp">
+          <div className="we-current-temp">
             {Math.round(weather.current.temp_c)}°
             <img 
               src={weather.current.condition.icon}
               alt={weather.current.condition.text}
-              className="weather-icon"
+              className="we-weather-icon"
             />
           </div>
 
           {hourlyForecast && hourlyForecast.length > 0 && (
-            <div className="hourly-forecast">
+            <div className="we-hourly-forecast">
               {hourlyForecast.map((hour, index) => (
-                <div key={index} className="forecast-hour">
-                  <div className="hour-temp">{Math.round(hour.temp_c)}°</div>
+                <div key={index} className="we-forecast-hour">
+                  <div className="we-hour-temp">{Math.round(hour.temp_c)}°</div>
                   <img 
                     src={hour.condition.icon}
                     alt={hour.condition.text}
-                    className="hour-icon"
+                    className="we-hour-icon"
                   />
-                  <div className="hour-time">
+                  <div className="we-hour-time">
                     {new Date(hour.time).getHours()}:00
                   </div>
                 </div>

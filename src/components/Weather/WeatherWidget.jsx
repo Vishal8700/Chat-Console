@@ -1,145 +1,275 @@
-import { useState, useEffect } from 'react';
-import './Weather.css';
+import { useState, useEffect, useCallback, useRef } from "react"
+import "./WeatherWidget.css"
+import {
+  SunnyIcon,
+  CloudIcon,
+  RainIcon,
+  SnowIcon,
+  WindIcon,
+  DropIcon,
+  EyeIcon,
+  RefreshIcon,
+  CloseIcon,
+  LocationIcon
+} from "./weatherIcons"
 
-function Weather() {
-  const [weather, setWeather] = useState(null);
-  const [weatherLoading, setWeatherLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [watchId, setWatchId] = useState(null);
+const getWeatherIcon = (conditionCode) => {
+  if (conditionCode === 1000) return <SunnyIcon />
+  if ([1003, 1006, 1009].includes(conditionCode)) return <CloudIcon />
+  if ([1063, 1180, 1183, 1186, 1189, 1192, 1195].includes(conditionCode)) return <RainIcon />
+  if ([1066, 1210, 1213, 1216, 1219, 1222, 1225].includes(conditionCode)) return <SnowIcon />
+  return <CloudIcon />
+}
+
+const WeatherWidget = ({ className = "" }) => {
+  const [weather, setWeather] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState(false)
+  const [updating, setUpdating] = useState(false)
+  const [error, setError] = useState(null)
+  const widgetRef = useRef(null)
+
+  const fetchWeather = useCallback(async (query, isUpdate = false) => {
+    try {
+      if (isUpdate) setUpdating(true)
+      else setLoading(true)
+
+      await new Promise((resolve) => setTimeout(resolve, 800))
+
+      const mockData = {
+        location: {
+          name: query.includes(",") ? "Current Location" : "Mumbai",
+          country: "India",
+          region: "Maharashtra",
+        },
+        current: {
+          temp_c: 27,
+          condition: {
+            text: "Partly Cloudy",
+            icon: "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+            code: 1003,
+          },
+          humidity: 65,
+          wind_kph: 12,
+          vis_km: 15,
+          feelslike_c: 29,
+        },
+        forecast: {
+          forecastday: [
+            {
+              date: new Date().toISOString().split("T")[0],
+              day: {
+                maxtemp_c: 30,
+                mintemp_c: 22,
+                condition: {
+                  text: "Partly Cloudy",
+                  icon: "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                },
+              },
+            },
+            {
+              date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+              day: {
+                maxtemp_c: 28,
+                mintemp_c: 20,
+                condition: {
+                  text: "Sunny",
+                  icon: "https://cdn.weatherapi.com/weather/64x64/day/113.png",
+                },
+              },
+            },
+          ],
+        },
+      }
+
+      setWeather(mockData)
+      setError(null)
+    } catch (err) {
+      setError("Failed to fetch weather data")
+    } finally {
+      setLoading(false)
+      setUpdating(false)
+    }
+  }, [])
+
+  const getCurrentLocation = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Geolocation not supported"))
+        return
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position),
+        (error) => reject(error),
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000,
+        },
+      )
+    })
+  }, [])
+
+  const initializeWeather = useCallback(async () => {
+    try {
+      const position = await getCurrentLocation()
+      const { latitude, longitude } = position.coords
+      await fetchWeather(`${latitude},${longitude}`)
+    } catch (error) {
+      await fetchWeather("Mumbai")
+    }
+  }, [getCurrentLocation, fetchWeather])
+
+  const handleRefresh = useCallback(async () => {
+    if (weather) {
+      await fetchWeather("refresh", true)
+    }
+  }, [weather, fetchWeather])
+
+  const toggleExpanded = () => setExpanded(!expanded)
 
   useEffect(() => {
-    const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-    
-    const fetchWeather = async (query) => {
-      try {
-        setWeatherLoading(true);
-        
-        const response = await fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${query}&days=7`
-        );
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error?.message || 'Weather data not available');
-        }
-        
-        const data = await response.json();
-        setWeather(data);
-        setError(null);
-      } catch (error) {
-        setError('Failed to fetch weather data: ' + error.message);
-      } finally {
-        setWeatherLoading(false);
+    initializeWeather()
+  }, [initializeWeather])
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target)) {
+        setExpanded(false)
       }
-    };
+    }
+    if (expanded) {
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [expanded])
 
-    const getLocation = () => {
-      return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error('Geolocation not supported by your browser'));
-          return;
-        }
-        
-        navigator.geolocation.getCurrentPosition(
-          position => resolve(position),
-          error => reject(error),
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0
-          }
-        );
-      });
-    };
-
-    const setupLocationTracking = async () => {
-      try {
-        const position = await getLocation();
-        const { latitude, longitude } = position.coords;
-        // console.log(`Initial location: ${latitude}, ${longitude}`);
-        await fetchWeather(`${latitude},${longitude}`);
-        
-        // Set up continuous location watching with less frequent updates
-        const id = navigator.geolocation.watchPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            fetchWeather(`${latitude},${longitude}`);
-          },
-          (error) => {
-            setError('Location error: ' + error.message);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 1800000 // Update if location is older than 30 minutes
-          }
-        );
-
-        setWatchId(id);
-      } catch (error) {
-        // console.error('Geolocation error:', error);
-        setError('Location access denied or unavailable. Using default location.');
-        // Fallback to default location
-        fetchWeather('Mumbai');
-      }
-    };
-
-    setupLocationTracking();
-
-    // Cleanup function to stop watching location
-    return () => {
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-    };
-  }, []);
-
-  if (weatherLoading && !weather) {
+  if (loading) {
     return (
-      <div className="weather-info">
-        <div className="weather-container">
-          <div className="loading-spinner"></div>
-          <p>Loading weather data...</p>
-        </div>
+      <div className={`weather-widget ${className}`} ref={widgetRef}>
+        <button className="weather-pill loading">
+        
+          <span>Loading...</span>
+        </button>
       </div>
-    );
+    )
   }
 
   if (error && !weather) {
     return (
-      <div className="weather-info">
-        <div className="weather-container error-container">
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Retry</button>
-        </div>
+      <div className={`weather-widget ${className}`} ref={widgetRef}>
+        <button className="weather-pill error" onClick={initializeWeather}>
+          <span><CloseIcon /></span>
+          <span>Error</span>
+        </button>
       </div>
-    );
+    )
   }
 
   if (!weather) {
     return (
-      <div className="weather-info">
-        <div className="weather-container">Weather unavailable</div>
+      <div className={`weather-widget ${className}`} ref={widgetRef}>
+        <button className="weather-pill">
+          <span><CloudIcon /></span>
+          <span>--°C</span>
+        </button>
       </div>
-    );
+    )
   }
-  return (
-    <div className="weather-info">
-      <div className="weather-container">
-        {weatherLoading && <div className="updating-indicator">Updating...</div>}
-        <img 
-          src={weather.current.condition.icon} 
-          alt={weather.current.condition.text}
-          className="weather-icon"
-        />
-        <span className="temperature">{Math.round(weather.current.temp_c)}°C</span>
-        <span className="condition">{weather.current.condition.text}</span>
-        <span className="location">
-          {weather.location.name}, {weather.location.country}
-        </span>
-      </div>
-    </div>
-  );
-}  
 
-export default Weather;
+  const weatherIcon = getWeatherIcon(weather.current.condition.code)
+
+  return (
+    <div className={`weather-widget ${className}`} ref={widgetRef}>
+      {expanded && (
+        <div className="weather-expanded">
+          <div className="weather-card">
+            <div className="weather-header">
+              <div className="location-info">
+                <div className="location-icon"><LocationIcon /></div>
+                <div className="location-details">
+                  <div className="location-name">{weather.location.name}</div>
+                  <div className="location-region">
+                    {weather.location.region}, {weather.location.country}
+                  </div>
+                </div>
+              </div>
+              <div className="weather-actions">
+                <button className={`action-btn ${updating ? "updating" : ""}`} onClick={handleRefresh} disabled={updating}>
+                  <RefreshIcon />
+                </button>
+                <button className="action-btn close-btn" onClick={() => setExpanded(false)}>
+                  <CloseIcon />
+                </button>
+              </div>
+            </div>
+
+            <div className="current-weather">
+              <div className="weather-main">
+                <div className="weather-icon-large">{weatherIcon}</div>
+                <div className="temperature-info">
+                  <div className="current-temp">{Math.round(weather.current.temp_c)}°C</div>
+                  <div className="feels-like">Feels like {Math.round(weather.current.feelslike_c)}°C</div>
+                </div>
+              </div>
+              <div className="weather-condition">
+                <div className="condition-text">{weather.current.condition.text}</div>
+              </div>
+            </div>
+
+            <div className="weather-details">
+              <div className="detail-item">
+                <div className="detail-icon"><DropIcon /></div>
+                <div className="detail-label">Humidity</div>
+                <div className="detail-value">{weather.current.humidity}%</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-icon"><WindIcon /></div>
+                <div className="detail-label">Wind</div>
+                <div className="detail-value">{weather.current.wind_kph} km/h</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-icon"><EyeIcon /></div>
+                <div className="detail-label">Visibility</div>
+                <div className="detail-value">{weather.current.vis_km} km</div>
+              </div>
+            </div>
+
+            <div className="weather-forecast">
+              <h3 className="forecast-title">2-Day Forecast</h3>
+              <div className="forecast-list">
+                {weather.forecast.forecastday.slice(0, 2).map((day, index) => (
+                  <div key={day.date} className="forecast-item">
+                    <div className="forecast-info">
+                      <div className="forecast-icon">{weatherIcon}</div>
+                      <div className="forecast-details">
+                        <div className="forecast-day">{index === 0 ? "Today" : "Tomorrow"}</div>
+                        <div className="forecast-condition">{day.day.condition.text}</div>
+                      </div>
+                    </div>
+                    <div className="forecast-temps">
+                      <div className="temp-high">{Math.round(day.day.maxtemp_c)}°</div>
+                      <div className="temp-low">{Math.round(day.day.mintemp_c)}°</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button
+        className={`weather-pill ${expanded ? "expanded" : ""} ${updating ? "updating" : ""}`}
+        onClick={toggleExpanded}
+        title="Click to view detailed weather information"
+      >
+        <span className="pill-icon">{weatherIcon}</span>
+        <span className="pill-temp">{Math.round(weather.current.temp_c)}°C</span>
+        {updating && <div className="pill-spinner"><RefreshIcon /></div>}
+      </button>
+    </div>
+  )
+}
+
+export default WeatherWidget
